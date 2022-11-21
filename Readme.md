@@ -19,8 +19,6 @@ Console.WriteLine("d");
 ```
 
 
-https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode
-
 # How to:
 
 In Vscode:

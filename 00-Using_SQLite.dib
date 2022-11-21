@@ -57,3 +57,7 @@ using (var conn = new SQLiteConnection("Data Source=helloDB;Mode=Memory;Cache=Sh
     var res = conn.Query<int>("SELECT 50").FirstOrDefault();
     Console.WriteLine($"Result: {res}");
 }
+
+#!csharp
+
+//!share
