@@ -20,3 +20,11 @@ Console.WriteLine("d");
 
 
 https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode
+
+# How to:
+
+In Vscode:
+
+- install https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode
+- Open bottom panel in VSCode and click on the "Polyglot Notebook Values" to see all the variables
+- In this notebook I have added the //!share it will activate the output
