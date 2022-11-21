@@ -1,0 +1,26 @@
+#!markdown
+
+# Herer is some text
+
+# TOC
+
+#!markdown
+
+## another
+
+#!csharp
+
+var x = "hy";
+var y = new Dictionary<string, string>(){
+    {"a.1", "Dog"},
+    {"a.2", "Cat"},
+  {"a.3", "Pig"} };
+Console.WriteLine("d");
+
+#!csharp
+
+#!share
+
+#!csharp
+
+Console.WriteLine("d");

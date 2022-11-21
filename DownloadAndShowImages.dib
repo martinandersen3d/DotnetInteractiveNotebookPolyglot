@@ -1,0 +1,29 @@
+#!csharp
+
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.DotNet.Interactive;
+using Microsoft.DotNet.Interactive.Formatting;
+using static Microsoft.DotNet.Interactive.Formatting.PocketViewTags;
+
+void downloadAndShowImages(params string[] urls) {
+    display(span(urls.Select(url => 
+        img[src:url, style:"height:10em; padding: 4px", title:"Downloaded image", alt: "Loading error"]))
+    );
+}
+
+#!csharp
+
+downloadAndShowImages("https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/a4817c72e1e1d29.png");
+
+#!csharp
+
+downloadAndShowImages(
+    new [] {
+        "https://zxart.ee/zxscreen/border:5/mode:mix/pal:srgb/type:standard/zoom:1/id:364506/",
+        "https://zxart.ee/zxscreen/rotation:90/border:1/mode:mix/pal:srgb/type:standard/zoom:2/id:364819/",
+        "https://zxart.ee/zxscreen/border:5/mode:mix/pal:srgb/type:standard/zoom:1/id:365068/",
+        "https://zxart.ee/zxscreen/border:4/mode:mix/pal:srgb/type:standard/zoom:3/id:364542/",
+        "https://zxart.ee/zxscreen/rotation:90/border:5/mode:mix/pal:srgb/type:standard/zoom:1/id:365658/",
+    }
+);

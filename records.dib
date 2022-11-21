@@ -1,0 +1,171 @@
+#!markdown
+
+Records in C#
+
+#!csharp
+
+public class Course
+{
+    public string Name {get; set;}
+    public string Author {get; set;}
+}
+
+var course = new Course();
+course.Name = "Duck Hunting";
+course.Author = "John Doe";
+
+Console.WriteLine($"Course 1:\n{course.Name}\n{course.Author}");
+
+#!csharp
+
+var course2 = course;
+course2.Name = "Cat Hunting";
+
+Console.WriteLine($"Course 1:\n{course.Name}\n{course.Author}");
+Console.WriteLine($"\nCourse 2:\n{course2.Name}\n{course2.Author}");
+
+// Both entries have changed, because when initializing second course with first one, we have used the REFERENCE.
+
+#!csharp
+
+static void PrintCourse(Course course)
+{
+    Console.WriteLine(course.Name);
+}
+PrintCourse(course);
+
+#!csharp
+
+// Record type with two string properties - Name and Author
+public record CourseRecord(string Name, string Author);
+
+// POSITIONAL RECORD
+// can't create instance without providing declared properties
+var course3 = new CourseRecord("Witch Hunting", "John Doe");
+
+// A RECORD INSTANCE IS IMMUTABLE
+// ITS VALUES CANNOT CHANGE ONCE THE OBJECT WAS CONSTRUCTED
+// course3.Name = "Another Title";
+
+#!markdown
+
+Record is an immutable reference type
+Objects that shouldn't change shouldn't be changeable
+
+Do the properties of a DTO need to change in web application?
+No, because it would no longer represent the data that was sent.
+
+#!csharp
+
+public object ConvertToObject(Course course)
+{
+    // Positional records cannot use paranthesis object creation, because there is no parameterless constructor
+    // return CourseRecord()
+    // {
+    //     Name = "John"
+    // }
+
+    // we need to use constructor with parameters
+    return new CourseRecord(course.Name, course.Author);
+}
+
+#!csharp
+
+// Record descructuring
+// order of deconstruction is as it was declard in record
+var (name, author) = course3;
+Console.WriteLine($"{name}, {author}");
+
+#!csharp
+
+// Deconstructing class object
+
+// this will not work
+// var (name, author) = Course;
+
+public class CourseWithDeconstruct : Course
+{
+    // here's how we can make it work
+    public void Deconstruct(out string name, out string author)
+    {
+        name = Name;
+        author = Author;
+    }
+}
+
+var course4 = new CourseWithDeconstruct()
+{
+    Name = "Dog Hunting",
+    Author = "John Doe"
+};
+// now it works B)
+var (name, author) = course4;
+
+#!csharp
+
+// Record cloning
+var clone = course3 with { Author = "John Boe" };
+
+// won't work on regular class
+// var clonedClass = course4 with { Name = "John Boe" };
+
+#!csharp
+
+// Custom Record Types
+// record body can contain anything class body can
+// constructor and deconstructor is only generated for positional properties
+public record AdvancedRecord(string Name)
+{
+    // overriding default constructor
+    // public AdvancedRecord(string Name, string Author) : this() {}
+    public AdvancedRecord(string name, string author) : this(name) {}
+
+    // alternative of using property as class arguments
+    // we use init as setter!
+    // public string Name { get; init; }
+    // Init keyword can be used in classes as well
+    public string Author { get; init; }
+
+    // custom property
+    // lets use take control of getter and setter
+    public String Title
+    {
+        get
+        {
+            return $"{Name} - {Author}";
+        }
+    }
+}
+
+var course1 = new AdvancedRecord("Book X")
+{
+    Author = "John Doe"
+};
+
+var course2 = new AdvancedRecord("Book X", "John Doe");
+
+#!csharp
+
+// Inheritance and polymorphism
+
+// we can derive from record but we need to redeclare all the props and then pass them to class that we are deriving too
+// we cannot derive from sealed record
+public record UltraAdvancedRecord(string Name, int Duration) : AdvancedRecord(Name);
+
+// when cloning object of derived class we will get object of base class
+// behind the scene though it is still of derived class type
+
+#!csharp
+
+// Synthetized methods
+public record SynthetizerRecord(string Name, string Author)
+{
+    // can override only two methods
+}
+
+public record SynthetizerRecordExtended(string Name, string Author, int Age) : SynthetizerRecord(Name, Author)
+{
+    // can override 4 methods and one prop
+}
+
+// in IL a record is basically a class :)

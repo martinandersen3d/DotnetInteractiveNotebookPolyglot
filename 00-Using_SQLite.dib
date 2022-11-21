@@ -1,0 +1,59 @@
+#!markdown
+
+# Using SQLite in Notebook
+
+Install ExtensionLab NuGet package
+
+#!csharp
+
+#r "nuget: System.Data.SQLite, *-*"
+#r "nuget: Microsoft.DotNet.Interactive.ExtensionLab, *-*"
+#r "nuget: Dapper, *-*"
+
+#!csharp
+
+#!lsmagic
+
+#!markdown
+
+Installing the `ExtensionLab` brings in some new magic commands including two additional verbs for the `#!connect` command, which you can see by running help for it.
+
+#!csharp
+
+#!connect -h
+
+#!csharp
+
+#!connect sqlite -h
+
+#!markdown
+
+## Using SQLite in SQL Notebook
+
+
+This sample demonstrates how to use the `#!connect` extension
+
+#!csharp
+
+#!connect sqlite --kernel-name hellodb "Data Source=helloDB;Mode=Memory;Cache=Shared"
+
+#!sql
+
+#!sql-hellodb
+
+select 10;
+
+#!markdown
+
+## Using Dapper and SQLite in C# Notebook
+
+#!csharp
+
+using System.Data.SQLite;
+using Dapper;
+
+using (var conn = new SQLiteConnection("Data Source=helloDB;Mode=Memory;Cache=Shared"))
+{
+    var res = conn.Query<int>("SELECT 50").FirstOrDefault();
+    Console.WriteLine($"Result: {res}");
+}

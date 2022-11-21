@@ -1,0 +1,78 @@
+#!markdown
+
+# HOWTO: Render a map image using the MapGuide Maestro API
+
+#!markdown
+
+Firstly, add a reference to the [`OSGeo.MapGuide.MaestroAPI`](https://www.nuget.org/packages/OSGeo.MapGuide.MaestroAPI) package on NuGet
+
+#!csharp
+
+#r "nuget:OSGeo.MapGuide.MaestroAPI,*-*"
+
+#!markdown
+
+Then create a new server connection
+
+#!csharp
+
+using OSGeo.MapGuide.MaestroAPI;
+using OSGeo.MapGuide.MaestroAPI.Commands;
+using OSGeo.MapGuide.MaestroAPI.Services;
+using OSGeo.MapGuide.ObjectModels;
+using OSGeo.MapGuide.ObjectModels.MapDefinition;
+using System.Drawing;
+using System.IO;
+using Microsoft.DotNet.Interactive.Formatting;
+
+// Change this to match your MapGuide server install as needed
+var mapAgentUri = "http://localhost:8018/mapguide/mapagent/mapagent.fcgi";
+
+var conn = ConnectionProviderRegistry.CreateConnection("Maestro.Http",
+    "Url", mapAgentUri,
+    "Username", "Administrator",
+    "Password", "admin");
+
+#!markdown
+
+Then create a runtime map instance and save it to your session repository
+
+#!csharp
+
+var mapSvc = conn.GetService((int)ServiceType.Mapping) as IMappingService;
+var resSvc = conn.ResourceService;
+var mdf = resSvc.GetResource("Library://Samples/Sheboygan/Maps/Sheboygan.MapDefinition") as IMapDefinition;
+
+double metersPerUnit = 111319.490793274;
+var cs = conn.CoordinateSystemCatalog.CreateCoordinateSystem(mdf.CoordinateSystem);
+metersPerUnit = cs.MetersPerUnit;
+
+var mid = "Session:" + conn.SessionID + "//TestRendering.Map";
+var map = mapSvc.CreateMap(mid, mdf, metersPerUnit);
+map.ViewScale = 8000;
+map.DisplayWidth = 800;
+map.DisplayHeight = 400;
+map.DisplayDpi = 96;
+
+map.Save();
+
+#!markdown
+
+Now that you have created the runtime map and saved it to the session repository, pass it to a rendering method
+
+#!csharp
+
+using (var mapImageStream = mapSvc.RenderRuntimeMap(map, map.ViewCenter.X, map.ViewCenter.Y, map.ViewScale, map.DisplayWidth, map.DisplayHeight, map.DisplayDpi, "PNG"))
+{
+    // For purpose of displaying the result in this interactive notebook, we will convert the stream to a base64 string and
+    // pass it to the built-in notebook display facility, but in the context of a web api endpoint, you would return the raw 
+    // stream  bytes with the appropriate mime type set
+    using (var ms = new MemoryStream())
+    {
+        await mapImageStream.CopyToAsync(ms);
+        ms.Position = 0L;
+
+        string base64str = Convert.ToBase64String(ms.ToArray());
+        display(PocketViewTags.img[src: "data:image/png;base64," + base64str]);
+    }
+}
