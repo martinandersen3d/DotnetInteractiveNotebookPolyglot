@@ -1,0 +1,41 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":null,"items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"F#","aliases":["f#","fs"]},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"html","languageName":"HTML"},{"name":"sql","languageName":"SQL"},{"name":"kql","languageName":"KQL"},{"name":"mermaid","languageName":"Mermaid"},{"name":"httpRequest","languageName":"http"},{"name":"value"}]}}
+
+#!markdown
+
+# Print Object to Terminal
+Output:
+
+#!csharp
+
+public class Admin
+{
+        public string name = "admin";
+        public string adminName = "admin";
+        public string password = "password";
+        public string email = "admin@localhost";
+        public bool isSuperAdmin = true;
+
+    public Admin()
+    {
+        
+    }
+}
+
+var admin = new Admin();
+
+void WriteObjectToConsole(object obj)
+{
+    var properties = obj.GetType().GetProperties();
+    foreach (var property in properties)
+    {
+        Console.WriteLine("{0,-20}: {1,-20}", property.Name, property.GetValue(obj));
+    }
+}
+WriteObjectToConsole(admin);
+
+#!markdown
+
+# Print Object to Terminal
+Output:

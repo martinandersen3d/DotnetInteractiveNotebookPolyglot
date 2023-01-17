@@ -1,0 +1,43 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":null,"items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"F#","aliases":["f#","fs"]},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"html","languageName":"HTML"},{"name":"sql","languageName":"SQL"},{"name":"kql","languageName":"KQL"},{"name":"mermaid","languageName":"Mermaid"},{"name":"httpRequest","languageName":"http"},{"name":"value"}]}}
+
+#!markdown
+
+# Print Json to Terminal
+Output:
+
+#!csharp
+
+public class Admin
+{
+        public string name = "admin";
+        public string adminName = "admin";
+        public string password = "password";
+        public string email = "admin@localhost";
+        public bool isSuperAdmin = true;
+
+    public Admin()
+    {
+        
+    }
+}
+
+var admin = new Admin();
+
+string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(admin);
+Console.WriteLine(jsonString);
+
+#!csharp
+
+using System.Text.Json;
+var json = "{\"name\":\"John\",\"age\":30,\"car\":null, \"Hi\": {\"you\": 3 }  }";
+dynamic jsonObject = JsonSerializer.Deserialize<dynamic>(json);
+
+var options = new JsonSerializerOptions
+{
+    WriteIndented = true
+};
+
+string indentedJson = JsonSerializer.Serialize(jsonObject, options);
+Console.WriteLine(indentedJson);
