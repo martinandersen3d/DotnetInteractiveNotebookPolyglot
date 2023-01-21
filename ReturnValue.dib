@@ -1,0 +1,89 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":null,"items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"F#","aliases":["f#","fs"]},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"html","languageName":"HTML"},{"name":"sql","languageName":"SQL"},{"name":"kql","languageName":"KQL"},{"name":"mermaid","languageName":"Mermaid"},{"name":"httpRequest","languageName":"http"},{"name":"value"}]}}
+
+#!csharp
+
+internal class Program
+{
+    public static void Main(string[] args)
+    {
+        var sum = Addition(3, 5);
+
+        Console.WriteLine($"Value: {sum.Value}");
+        if (sum.Success) Console.WriteLine("Good Job");
+        if (sum.Failed) Console.WriteLine("Ohh Nooo");
+        
+        var divide = Divide(5, 0);
+
+        Console.WriteLine($"Value: {divide.Value}");
+        if (divide.Success) Console.WriteLine("Good Job");
+        if (divide.Failed) Console.WriteLine("Ohh Nooo - You devided with 0");
+
+        var random = Random();
+    }
+
+    // A Sctruct that takes a Generic Type
+    // Note: Succes/Failed is set automaticly
+    public struct ReturnValue<T>
+    {
+        private T _value;
+        public T Value
+        {
+            get { return _value; }
+            set { _value = value; Success = true; }
+        }
+        
+        public bool Success;
+        public bool Failed => !Success;
+
+
+        private Exception _error;
+        public Exception Error
+        {
+            get { return _error; }
+            set { _error = value; Success = false; }
+        }
+    }
+
+    // Define return type to INT
+    public static ReturnValue<int> Addition(int x, int y)
+    {
+        var _return = new ReturnValue<int>();
+        _return.Value = x+y;
+        return _return;
+    }
+
+    // Define return type to DOUBLE
+    public static ReturnValue<double> Divide(int x, int y)
+    {
+        var _return = new ReturnValue<double>();
+        try
+        {
+            _return.Value = x / y;
+        }
+        catch (DivideByZeroException e)
+        {
+            _return.Error = e;
+            
+        }
+        return _return;
+    }
+
+    // Define return type to INT or NULL
+    public static ReturnValue<int?> Random()
+    {
+        var _return = new ReturnValue<int?>();
+
+        Random rnd = new Random();
+        int number = rnd.Next(1, 10);
+        if (number < 5)
+        {
+            _return.Value = 1;
+        }
+        else { _return.Value = null; }
+
+        return _return;
+    }
+
+}
